@@ -37,18 +37,19 @@ button {
     color: white;
     }
 
-.page-content{
+.contenedor{
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
 }
 
-.product-conteiner {
+.producto {
     padding: 20px;
     margin: 15px;
     position: relative;
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.1);
     background-color: white;
+    list-style: none;
 }
 
 .product-conteiner h2{
@@ -61,11 +62,12 @@ button {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
-.product-conteiner img{
+.imagen-producto img{
     width: 300px;
+    /* margin-left: 25px; */
 }
 
-.button-add {
+.buttonAdd {
     background-color: white;
     color: black;
     border: 2px solid #4CAF50;
@@ -73,12 +75,12 @@ button {
     transition-duration: 0.4s;
     }
 
-.button-add:hover {
+.buttonAdd:hover {
     background-color: #4CAF50;
     color: white;
     }
 
-.button-del {
+.buttonDel {
     background-color: white;
     color: black;
     border: 2px solid #e03731;
@@ -86,15 +88,21 @@ button {
     transition-duration: 0.4s;
     }
     
-.button-del:hover {
+.buttonDel:hover {
     background-color: #e03731;
     color: white;
     }
 
-#canasta {
-    display: inline-block;
+.canasta {
+    min-width: 400px;
+    max-width: 400px;
+    border-left: 1px solid #ececec;
     text-align: center;
-    width: 30%;
-    margin-left: 35%;
-    background-color: aliceblue;
+    padding: 20px 0 0 0;
+    background-color: #efefef;
+}
+    
+#canasta {
+    display: flex;
+    flex-wrap: wrap;
 }

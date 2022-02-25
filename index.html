@@ -19,74 +19,28 @@
 
     <div class="page-nav">
         <h1>Mi tienda</h1>
+        <h2 id="saludo"></h2>
         <button id="botonPagar" class="button-checkout" id="checkout" onclick="pay()">Pagar</button>
     </div>
-    <div class="page-content">
-        <div class="product-conteiner">
-            <h3>Cerveza</h3>
-            <img src="./media/product-1.jpg" alt="">
-            <h2>$180</h2>
-            <button class="button-add" id="botonAgregar">Agregar al carrito</button>
-            <button class="button-del" id="botonQuitar">Quitar del carrito</button>
-        </div>
-
-        <div class="product-conteiner">
-            <h3>Cerveza</h3>
-            <img src="./media/product-2.jpg" alt="">
-            <h2>$140</h2>
-            <button class="button-add" onclick="add('product-2', 140)">Agregar al carrito</button>
-            <button class="button-del" id="botonQuitar">Quitar del carrito</button>
-        </div>
-
-        <div class="product-conteiner">
-            <h3>Cerveza</h3>
-            <img src="./media/product-3.jpg" alt="">
-            <h2>$250</h2>
-            <button class="button-add" onclick="add('product-3', 250)">Agregar al carrito</button>
-            <button class="button-del" id="botonQuitar">Quitar del carrito</button>
-        </div>
-
-        <div class="product-conteiner">
-            <h3>Cerveza</h3>
-            <img src="./media/product-4.jpg" alt="">
-            <h2>$150</h2>
-            <button class="button-add" onclick="add('product-4', 150)">Agregar al carrito</button>
-            <button class="button-del" id="botonQuitar">Quitar del carrito</button>
-        </div>
-
-        <div class="product-conteiner">
-            <h3>Cerveza</h3>
-            <img src="./media/product-5.jpg" alt="">
-            <h2>$200</h2>
-            <button class="button-add" onclick="add('product-5', 200)">Agregar al carrito</button>
-            <button class="button-del" id="botonQuitar">Quitar del carrito</button>
-        </div>
-
-        <div class="product-conteiner">
-            <h3>Cerveza</h3>
-            <img src="./media/product-6.jpg" alt="">
-            <h2>$170</h2>
-            <button class="button-add" onclick="add('product-6', 170)">Agregar al carrito</button>
-            <button class="button-del" id="botonQuitar">Quitar del carrito</button>
-        </div>
-    </div>
-
-    <div id="canasta">
-
-
+    <div id="contFormulario">
+        <form id="formulario" action="">
+            <input id="usuario" type="text" placeholder="nombre">
+            <input id="edad" type="number" placeholder="edad">
+            <input value="enviar" type="submit">
+        </form>
 
     </div>
+    <div class="contenedor">
+        <div>
+            <ul id="listado"></ul>
+        </div>
 
+        <div class="canasta">
+            <h2>Canasta</h2>
+            <div id="canasta"></div>
+        </div>
 
-
-
-
-
-
-
-
-
-
+    </div>
 
 
 

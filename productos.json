@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "producto": "Cerveza 1",
+        "precio": 150,
+        "disponible": true,
+        "img": "./media/product-1.jpg"
+    },
+    {
+        "id": 2,
+        "producto": "Cerveza 2",
+        "precio": 250,
+        "disponible": true,
+        "img": "./media/product-2.jpg"
+    },
+    {
+        "id": 3,
+        "producto": "Cerveza 3",
+        "precio": 350,
+        "disponible": true,
+        "img": "./media/product-3.jpg"
+    }
+]
