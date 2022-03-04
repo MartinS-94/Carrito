@@ -13,13 +13,22 @@ button {
 
 
 .page-nav{
+    display: inline-flex;
     border: 1px solid black;
     background-color: #00bcd4;
     position: relative;
+    width: 100%;
 }
 
 .page-nav h1{
     margin: 20px;
+    width: 20%;
+}
+
+.page-nav h2{
+    text-align: center;
+    margin-left: 20%;
+
 }
 
 .button-checkout {
@@ -93,6 +102,9 @@ button {
     color: white;
     }
 
+
+/* Canasta */
+
 .canasta {
     min-width: 400px;
     max-width: 400px;
@@ -103,6 +115,15 @@ button {
 }
     
 #canasta {
-    display: flex;
+    display: inline-flex;
     flex-wrap: wrap;
+}
+
+.producto-canasta {
+    margin: auto;
+    margin-bottom: 15px;
+}
+
+.imagenProductoCanasta img {
+    width: 100px;
 }

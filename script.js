@@ -1,20 +1,4 @@
-// let products = [];
-// let total = 0;
-// const itemAdd = document.getElementById("product-1");
 
-
-// function add(product, price) {
-//     console.log(product, price);
-//     products.push(product);
-//     total = total + price;
-//     document.getElementById("checkout").innerHTML = `Pagar $${total}`;
-//     console.log(`Total a pagar $${total}`);
-//     itemAdd.innerHTML = "Se agrego este producto a la canasta";
-// }
-
-// function pay() {
-//     window.alert(products.join(", \n"));
-// }
 
 // storage
 
@@ -28,10 +12,16 @@ const contFormulario = document.getElementById("contFormulario");
 const saludo = document.getElementById("saludo");
 
 formulario.addEventListener("submit", (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     localStorage.setItem("usuario", formulario.children[0].value);
     localStorage.setItem("edad", formulario.children[1].value);
     nombreStorage = formulario.children[0].value;
+    Swal.fire({
+        title: 'Bienvenido',
+        text: `¡${formulario.children[0].value}, es momento de comprar!`,
+        icon: 'success',
+        confirmButtonText: 'Continuar'
+    });
     verificarFormulario();
 });
 
@@ -51,15 +41,9 @@ verificarFormulario();
 
 const BIENVENIDA = "bienvenido";
 
-// let nombre = prompt("Ingresa tu nombre")
+
 localStorage.setItem(BIENVENIDA, `Benvenido `); // agregar en el Nav "Bienvenido ******"
 localStorage.setItem("mayorDeEdad", true); // validacion de edad para comprar
-
-// const saludoStorage = localStorage.getItem(BIENVENIDA);
-
-// const saludo = document.getElementById("saludo");
-
-// saludo.innerHTML = saludoStorage + ` ${nombre}`;
 
 // Productos
 
@@ -102,12 +86,21 @@ const agregarACanasta = (producto) => {
     contenedor.className = "producto-canasta";
     contenedor.id = producto.id;
     contenedor.innerHTML = `
-        <div class="imagen-producto">
+        <div class="imagenProductoCanasta">
         <img src="${producto.imagen}" alt="">
         </div>
-        <p class="nombre">${producto.nombre}</p>
-        <p class="precio">${producto.precio}</p>`;
+        <p class="nombreCanasta">${producto.nombre}</p>
+        <p class="precioCanasta">${producto.precio}</p>
+        <button class="botonDel">Eliminar</button>`;        
     canasta.appendChild(contenedor);
+        Toastify({
+            text: `Se agrego ${producto.nombre} a la canasta`,
+            duration: 2500,
+            offset: {
+                x: 150, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+                y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+            }
+        }).showToast();
 }
 
 
@@ -137,7 +130,7 @@ arrayDesdeStorage.forEach(producto => {
 });
 
 
-
+// const prodCanasta = document.getElementsById("");
 
 
 // const botonAdd = document.getElementById("botonAgregar");
