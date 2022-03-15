@@ -45,39 +45,36 @@ const BIENVENIDA = "bienvenido";
 localStorage.setItem(BIENVENIDA, `Benvenido `); // agregar en el Nav "Bienvenido ******"
 localStorage.setItem("mayorDeEdad", true); // validacion de edad para comprar
 
-// Productos
 
-const productos = [
-    {   id: 1,
-        nombre: "Cerveza 1",
-        precio: 150,
-        imagen: "./media/product-1.jpg"},
-
-    {   id: 2, 
-        nombre: "Cerveza 2",
-        precio: 250,
-        imagen: "./media/product-2.jpg"},
-
-    {   id: 3,
-        nombre: "Cerveza 3",
-        precio: 350,
-        imagen: "./media/product-3.jpg"}];
 
 const listado = document.getElementById("listado");
 
-for (const producto of productos) {
-    let contenedor = document.createElement("li");
-    contenedor.className = "producto";
-    contenedor.id = producto.id;
-        contenedor.innerHTML = `
-        <div class="imagen-producto">
-        <img src="${producto.imagen}" alt="">
-        </div>
-        <p class="nombre">${producto.nombre}</p>
-        <p class="precio">${producto.precio}</p>`;
-    contenedor.onclick = () => agregarACanasta(producto);
-    listado.appendChild(contenedor);
+const insertarProductos = () => {
+    return fetch("productos.json");
 }
+
+insertarProductos()
+.then(resultado => resultado.json())
+.then(respuesta => {
+    listado.innerHTML = ``;
+    for (const producto of respuesta) {
+        let contenedor = document.createElement("li");
+        contenedor.className = "producto";
+        contenedor.id = producto.id;
+            contenedor.innerHTML = `
+            <div class="imagen-producto">
+            <img src="${producto.img}" alt="">
+            </div>
+            <p class="nombre">${producto.producto}</p>
+            <p class="precio">${producto.precio}</p>`;
+        contenedor.onclick = () => agregarACanasta(producto);
+        listado.appendChild(contenedor);
+    }
+    
+})
+.catch(error => {
+    listado.innerHTML = error;
+})
 
 const canasta = document.getElementById("canasta");
 
@@ -87,9 +84,9 @@ const agregarACanasta = (producto) => {
     contenedor.id = producto.id;
     contenedor.innerHTML = `
         <div class="imagenProductoCanasta">
-        <img src="${producto.imagen}" alt="">
+        <img src="${producto.img}" alt="">
         </div>
-        <p class="nombreCanasta">${producto.nombre}</p>
+        <p class="nombreCanasta">${producto.producto}</p>
         <p class="precioCanasta">${producto.precio}</p>
         <button class="botonDel">Eliminar</button>`;        
     canasta.appendChild(contenedor);
@@ -103,31 +100,47 @@ const agregarACanasta = (producto) => {
         }).showToast();
 }
 
+// Productos
 
+// const productos = [
+//     {   id: 1,
+//         nombre: "Cerveza 1",
+//         precio: 150,
+//         imagen: "./media/product-1.jpg"},
 
-const arrayProductos = [
-    {   id: 1,
-        nombre: "Cerveza 1",
-        precio: 150,
-        imagen: "./media/product-1.jpg"},
+//     {   id: 2, 
+//         nombre: "Cerveza 2",
+//         precio: 250,
+//         imagen: "./media/product-2.jpg"},
 
-    {   id: 2, 
-        nombre: "Cerveza 2",
-        precio: 250,
-        imagen: "./media/product-2.jpg"},
+//     {   id: 3,
+//         nombre: "Cerveza 3",
+//         precio: 350,
+//         imagen: "./media/product-3.jpg"}];
 
-    {   id: 3,
-        nombre: "Cerveza 3",
-        precio: 350,
-        imagen: "./media/product-3.jpg"}];
+// const arrayProductos = [
+//     {   id: 1,
+//         nombre: "Cerveza 1",
+//         precio: 150,
+//         imagen: "./media/product-1.jpg"},
 
-localStorage.setItem("arrayProductos", JSON.stringify(arrayProductos));
+//     {   id: 2, 
+//         nombre: "Cerveza 2",
+//         precio: 250,
+//         imagen: "./media/product-2.jpg"},
 
-const arrayDesdeStorage = JSON.parse(localStorage.getItem("arrayProductos"));
+//     {   id: 3,
+//         nombre: "Cerveza 3",
+//         precio: 350,
+//         imagen: "./media/product-3.jpg"}];
 
-arrayDesdeStorage.forEach(producto => {
-    console.log(producto);
-});
+// localStorage.setItem("arrayProductos", JSON.stringify(arrayProductos));
+
+// const arrayDesdeStorage = JSON.parse(localStorage.getItem("arrayProductos"));
+
+// arrayDesdeStorage.forEach(producto => {
+//     console.log(producto);
+// });
 
 
 // const prodCanasta = document.getElementsById("");
