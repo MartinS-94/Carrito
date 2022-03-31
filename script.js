@@ -31,33 +31,35 @@ insertarProductos()
     listado.innerHTML = error;
   });
 
-// FUNCION RESTAR ITEM DE CANASTA
+  // FUNCION MOSTRAR EN LA CANASTA
 
-const restarDeCanasta = (producto) => {
-  let canasta = JSON.parse(localStorage.getItem("canasta"));
-  for (let i = 0; i < canasta.length; i++) {
-    if (canasta[i].id == producto.id) {      
-      if (canasta[i].cantidad > 1) { 
-        canasta[i].cantidad--;
-      } else { 
-          if (producto.id == canasta[i].id) {
-            canasta.splice(i, 1);
-            break;
-          }
-      }
+const mostrarEnCanasta = () => {
+  let canastaStorage = JSON.parse(localStorage.getItem("canasta"));
+  canasta.innerHTML = "";
+  if (canastaStorage) {
+    for (const item of canastaStorage) {
+      let contenedor = document.createElement("div");
+      contenedor.className = "producto-canasta";
+      contenedor.id = item.id;
+      let botonElim = `buttonDel${item.id}`;
+      let botonSum = `buttonAdd${item.id}`;
+      let botonRest = `buttonRes${item.id}`;
+      contenedor.innerHTML = `
+                <div class="imagenProductoCanasta">
+                <img src="${item.img}" alt="">
+                </div>
+                <p class="nombreCanasta">${item.nombre}</p>
+                <p class="precioCanasta">$ ${item.precio * item.cantidad}</p>
+                <p>Cantidad ${item.cantidad}</p>
+                <button class="buttonAdd" id=${botonSum}>+</button>  
+                <button class="buttonRes" id=${botonRest}>-</button>   
+                <button class="buttonDel" id=${botonElim}>Eliminar</button>`;
+      canasta.appendChild(contenedor);
+      document.getElementById(botonSum).onclick = () => agregarACanasta(item);
+      document.getElementById(botonRest).onclick = () => restarDeCanasta(item);
+      document.getElementById(botonElim).onclick = () => deleteItem(contenedor.id);
     }
   }
-  Toastify({
-    text: `Se elimino ${producto.nombre} x 1 del carrito`,
-    duration: 1250,
-    offset: {
-      x: 150, 
-      y: 10, 
-    },
-  }).showToast();
-  localStorage.setItem("canasta", JSON.stringify(canasta));
-  mostrarEnCanasta(); 
-  botonDeVaciar();
 };
 
 // FUNCION AGREGAR ITEM A LA CANASTA
@@ -90,36 +92,61 @@ const agregarACanasta = (producto) => {
   botonDeVaciar();
 };
 
-// FUNCION MOSTRAR EN LA CANASTA
 
-const mostrarEnCanasta = () => {
-  let canastaStorage = JSON.parse(localStorage.getItem("canasta"));
-  canasta.innerHTML = "";
-  if (canastaStorage) {
-    for (const item of canastaStorage) {
-      let contenedor = document.createElement("div");
-      contenedor.className = "producto-canasta";
-      contenedor.id = item.id;
-      let nombreBoton = `botonDel${item.id}`;
-      let botonSum = `buttonAdd${item.id}`;
-      let botonRest = `buttonDel${item.id}`;
-      contenedor.innerHTML = `
-                <div class="imagenProductoCanasta">
-                <img src="${item.img}" alt="">
-                </div>
-                <p class="nombreCanasta">${item.nombre}</p>
-                <p class="precioCanasta">$ ${item.precio * item.cantidad}</p>
-                <p>Cantidad ${item.cantidad}</p>
-                <button class="buttonAdd" id=${botonSum}>+</button>  
-                <button class="buttonDel" id=${botonRest}>-</button>   
-                <button class="botonDel" id=${nombreBoton}>Eliminar</button>`;
-      canasta.appendChild(contenedor);
-      document.getElementById(botonSum).onclick = () => agregarACanasta(item);
-      document.getElementById(botonRest).onclick = () => restarDeCanasta(item);
-      document.getElementById(nombreBoton).onclick = () => deleteItem(contenedor.id);
+// FUNCION RESTAR ITEM DE CANASTA
+
+const restarDeCanasta = (producto) => {
+  let canasta = JSON.parse(localStorage.getItem("canasta"));
+  for (let i = 0; i < canasta.length; i++) {
+    if (canasta[i].id == producto.id) {      
+      if (canasta[i].cantidad > 1) { 
+        canasta[i].cantidad--;
+      } else { 
+          if (producto.id == canasta[i].id) {
+            canasta.splice(i, 1);
+            break;
+          }
+      }
     }
   }
+  Toastify({
+    text: `Se elimino ${producto.nombre} x 1 del carrito`,
+    duration: 1250,
+    offset: {
+      x: 150, 
+      y: 10, 
+    },
+  }).showToast();
+  localStorage.setItem("canasta", JSON.stringify(canasta));
+  mostrarEnCanasta(); 
+  botonDeVaciar();
 };
+
+
+// FUNCION BOTON ELIMINAR ITEM DE CANASTA
+
+const deleteItem = (parametro) => {
+  let canastaStorage = JSON.parse(localStorage.getItem("canasta"));
+  for (let i = 0; i < canastaStorage.length; i++) {
+    if (parametro == canastaStorage[i].id) {
+      canastaStorage.splice(i, 1);
+      break;
+    }
+  }
+  Toastify({
+    text: `Se elimino el producto del carrito`,
+    duration: 1250,
+    offset: {
+      x: 150, 
+      y: 10, 
+    },
+  }).showToast();
+  localStorage.setItem("canasta", JSON.stringify(canastaStorage));
+  mostrarEnCanasta();
+  botonDeVaciar();
+};
+
+
 
 // FUNCION BOTON VACIAR CANASTA
 
@@ -147,21 +174,6 @@ const botonDeVaciar = () => {
       })
     }
   }
-};
-
-// FUNCION BOTON ELIMINAR ITEM DE CANASTA
-
-const deleteItem = (parametro) => {
-  let canastaStorage = JSON.parse(localStorage.getItem("canasta"));
-  for (let i = 0; i < canastaStorage.length; i++) {
-    if (parametro == canastaStorage[i].id) {
-      canastaStorage.splice(i, 1);
-      break;
-    }
-  }
-  localStorage.setItem("canasta", JSON.stringify(canastaStorage));
-  mostrarEnCanasta();
-  botonDeVaciar();
 };
 
 
@@ -194,6 +206,6 @@ const btnPagar = () => {
       }
     })
     } else {
-      Swal.fire('Primero debes agregar algun producto!','','error')
+      Swal.fire('¡Primero debes agregar algun producto!','','error')
     }
 }

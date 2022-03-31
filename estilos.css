@@ -25,11 +25,6 @@ button {
     width: 20%;
 }
 
-.page-nav h2{
-    text-align: center;
-    margin-left: 20%;
-
-}
 
 #vaciarCanasta {
     background-color: rgb(231, 81, 81);
@@ -118,8 +113,10 @@ button {
     max-width: 400px;
     border-left: 1px solid #ececec;
     text-align: center;
-    padding: 20px 0 0 0;
+    padding: 20px 0 15px;
     background-color: #efefef;
+    margin-bottom: 15px;
+
 }
     
 #canasta {
