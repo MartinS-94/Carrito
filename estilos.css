@@ -31,6 +31,13 @@ button {
 
 }
 
+#vaciarCanasta {
+    background-color: rgb(231, 81, 81);
+    color: black;
+    border: 2px solid #180502;
+    transition-duration: 0.4s;
+    }
+
 .button-checkout {
     background-color: white;
     color: black;
@@ -53,6 +60,7 @@ button {
 }
 
 .producto {
+    width: 200px;
     padding: 20px;
     margin: 15px;
     position: relative;
@@ -72,7 +80,7 @@ button {
 }
 
 .imagen-producto img{
-    width: 300px;
+    width: 200px;
     /* margin-left: 25px; */
 }
 
@@ -117,6 +125,7 @@ button {
 #canasta {
     display: inline-flex;
     flex-wrap: wrap;
+    flex-direction: column;
 }
 
 .producto-canasta {

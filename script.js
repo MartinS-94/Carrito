@@ -1,169 +1,199 @@
-
-
-// storage
-
-// const saludoStorage = localStorage.getItem(BIENVENIDA);
-let nombreStorage = localStorage.getItem("usuario");
-let edadStorage = localStorage.getItem("edad");
-
-const formulario = document.getElementById("formulario");
-const contFormulario = document.getElementById("contFormulario");
-
-const saludo = document.getElementById("saludo");
-
-formulario.addEventListener("submit", (e) => {
-    // e.preventDefault();
-    localStorage.setItem("usuario", formulario.children[0].value);
-    localStorage.setItem("edad", formulario.children[1].value);
-    nombreStorage = formulario.children[0].value;
-    Swal.fire({
-        title: 'Bienvenido',
-        text: `¡${formulario.children[0].value}, es momento de comprar!`,
-        icon: 'success',
-        confirmButtonText: 'Continuar'
-    });
-    verificarFormulario();
-});
-
-const verificarFormulario = () => {
-    if (nombreStorage && nombreStorage !== "null" && edadStorage >= 18) {
-        console.log("La informacion ya existe");
-        contFormulario.remove();
-        saludo.innerHTML = `Bienvenido ${nombreStorage}`;
-    }  else {
-            console.log("Ingrese sus datos");
-    }
-}
-
-verificarFormulario();
-
-
-
-const BIENVENIDA = "bienvenido";
-
-
-localStorage.setItem(BIENVENIDA, `Benvenido `); // agregar en el Nav "Bienvenido ******"
-localStorage.setItem("mayorDeEdad", true); // validacion de edad para comprar
-
-
+// INSERTAR PRODUCTOS EN LA TIENDA
 
 const listado = document.getElementById("listado");
+const canasta = document.getElementById("canasta");
 
 const insertarProductos = () => {
-    return fetch("productos.json");
-}
+  return fetch("productos.json");
+};
 
 insertarProductos()
-.then(resultado => resultado.json())
-.then(respuesta => {
+  .then((resultado) => resultado.json())
+  .then((respuesta) => {
     listado.innerHTML = ``;
     for (const producto of respuesta) {
-        let contenedor = document.createElement("li");
-        contenedor.className = "producto";
-        contenedor.id = producto.id;
-            contenedor.innerHTML = `
+      let contenedor = document.createElement("li");
+      contenedor.className = "producto";
+      contenedor.id = producto.id;
+      contenedor.innerHTML = `
             <div class="imagen-producto">
             <img src="${producto.img}" alt="">
             </div>
-            <p class="nombre">${producto.producto}</p>
-            <p class="precio">${producto.precio}</p>`;
-        contenedor.onclick = () => agregarACanasta(producto);
-        listado.appendChild(contenedor);
+            <p class="nombre">${producto.nombre}</p>
+            <p class="precio">$ ${producto.precio}</p>`;
+      contenedor.onclick = () => agregarACanasta(producto);
+      listado.appendChild(contenedor);
+      mostrarEnCanasta();
+      botonDeVaciar();
     }
-    
-})
-.catch(error => {
+  })
+  .catch((error) => {
     listado.innerHTML = error;
-})
+  });
 
-const canasta = document.getElementById("canasta");
+// FUNCION RESTAR ITEM DE CANASTA
+
+const restarDeCanasta = (producto) => {
+  let canasta = JSON.parse(localStorage.getItem("canasta"));
+  for (let i = 0; i < canasta.length; i++) {
+    if (canasta[i].id == producto.id) {      
+      if (canasta[i].cantidad > 1) { 
+        canasta[i].cantidad--;
+      } else { 
+          if (producto.id == canasta[i].id) {
+            canasta.splice(i, 1);
+            break;
+          }
+      }
+    }
+  }
+  Toastify({
+    text: `Se elimino ${producto.nombre} x 1 del carrito`,
+    duration: 1250,
+    offset: {
+      x: 150, 
+      y: 10, 
+    },
+  }).showToast();
+  localStorage.setItem("canasta", JSON.stringify(canasta));
+  mostrarEnCanasta(); 
+  botonDeVaciar();
+};
+
+// FUNCION AGREGAR ITEM A LA CANASTA
 
 const agregarACanasta = (producto) => {
-    let contenedor = document.createElement("div");
-    contenedor.className = "producto-canasta";
-    contenedor.id = producto.id;
-    contenedor.innerHTML = `
-        <div class="imagenProductoCanasta">
-        <img src="${producto.img}" alt="">
-        </div>
-        <p class="nombreCanasta">${producto.producto}</p>
-        <p class="precioCanasta">${producto.precio}</p>
-        <button class="botonDel">Eliminar</button>`;        
-    canasta.appendChild(contenedor);
-        Toastify({
-            text: `Se agrego ${producto.nombre} a la canasta`,
-            duration: 2500,
-            offset: {
-                x: 150, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
-                y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
-            }
-        }).showToast();
+  let canasta = JSON.parse(localStorage.getItem("canasta"));
+  let found = 0;
+  if (canasta) {
+    for (const item of canasta) {
+      if (item.id == producto.id) {
+        item.cantidad++;
+        found = 1;
+        break;
+      }
+    }
+    if (found == 0) canasta.push({ ...producto, cantidad: 1 });
+  } else {
+    canasta = [{ ...producto, cantidad: 1 }];
+  }
+  Toastify({
+    text: `Se agrego ${producto.nombre} x 1 al carrito`,
+    duration: 1250,
+    offset: {
+      x: 150, 
+      y: 10, 
+    },
+  }).showToast();
+  localStorage.setItem("canasta", JSON.stringify(canasta));
+  mostrarEnCanasta();
+  botonDeVaciar();
+};
+
+// FUNCION MOSTRAR EN LA CANASTA
+
+const mostrarEnCanasta = () => {
+  let canastaStorage = JSON.parse(localStorage.getItem("canasta"));
+  canasta.innerHTML = "";
+  if (canastaStorage) {
+    for (const item of canastaStorage) {
+      let contenedor = document.createElement("div");
+      contenedor.className = "producto-canasta";
+      contenedor.id = item.id;
+      let nombreBoton = `botonDel${item.id}`;
+      let botonSum = `buttonAdd${item.id}`;
+      let botonRest = `buttonDel${item.id}`;
+      contenedor.innerHTML = `
+                <div class="imagenProductoCanasta">
+                <img src="${item.img}" alt="">
+                </div>
+                <p class="nombreCanasta">${item.nombre}</p>
+                <p class="precioCanasta">$ ${item.precio * item.cantidad}</p>
+                <p>Cantidad ${item.cantidad}</p>
+                <button class="buttonAdd" id=${botonSum}>+</button>  
+                <button class="buttonDel" id=${botonRest}>-</button>   
+                <button class="botonDel" id=${nombreBoton}>Eliminar</button>`;
+      canasta.appendChild(contenedor);
+      document.getElementById(botonSum).onclick = () => agregarACanasta(item);
+      document.getElementById(botonRest).onclick = () => restarDeCanasta(item);
+      document.getElementById(nombreBoton).onclick = () => deleteItem(contenedor.id);
+    }
+  }
+};
+
+// FUNCION BOTON VACIAR CANASTA
+
+const botonDeVaciar = () => {  
+  if (canasta.innerHTML != "") {
+    let botonBorrar = document.createElement("button");
+    botonBorrar.id = "vaciarCanasta";
+    botonBorrar.textContent = "¡Vaciar Canasta!";
+    canasta.appendChild(botonBorrar);
+    botonBorrar.onclick = () => { 
+    Swal.fire({
+      title: 'Estas seguro que quieres borrar todos los productos?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, eliminar!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+          canasta.innerHTML = "";
+          localStorage.removeItem("canasta");
+          Swal.fire(
+            'Se ha vaciado el carrito!', '', 'success')
+        };
+      })
+    }
+  }
+};
+
+// FUNCION BOTON ELIMINAR ITEM DE CANASTA
+
+const deleteItem = (parametro) => {
+  let canastaStorage = JSON.parse(localStorage.getItem("canasta"));
+  for (let i = 0; i < canastaStorage.length; i++) {
+    if (parametro == canastaStorage[i].id) {
+      canastaStorage.splice(i, 1);
+      break;
+    }
+  }
+  localStorage.setItem("canasta", JSON.stringify(canastaStorage));
+  mostrarEnCanasta();
+  botonDeVaciar();
+};
+
+
+// FUNCION BOTON CHECKOUT
+
+document.getElementById("checkout").onclick = () => btnPagar();
+
+const btnPagar = () => {
+  let canastaStorage = JSON.parse(localStorage.getItem("canasta"));
+  let total = 0;
+    if (canastaStorage) {
+      for (const item of canastaStorage) {
+        total += item.cantidad * item.precio;
+      }
+    }
+    if (total != 0) {
+    Swal.fire({
+      icon: 'warning',
+      title: `El total es $ ${total}`,
+      showDenyButton: true,
+      confirmButtonText: 'Pagar',
+      denyButtonText: `Continuar comprando`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire('Tu compra ha sido exitosa', '', 'success')
+        canasta.innerHTML = "";
+        localStorage.removeItem("canasta");
+      } else if (result.isDenied) {
+        Swal.close()
+      }
+    })
+    } else {
+      Swal.fire('Primero debes agregar algun producto!','','error')
+    }
 }
-
-// Productos
-
-// const productos = [
-//     {   id: 1,
-//         nombre: "Cerveza 1",
-//         precio: 150,
-//         imagen: "./media/product-1.jpg"},
-
-//     {   id: 2, 
-//         nombre: "Cerveza 2",
-//         precio: 250,
-//         imagen: "./media/product-2.jpg"},
-
-//     {   id: 3,
-//         nombre: "Cerveza 3",
-//         precio: 350,
-//         imagen: "./media/product-3.jpg"}];
-
-// const arrayProductos = [
-//     {   id: 1,
-//         nombre: "Cerveza 1",
-//         precio: 150,
-//         imagen: "./media/product-1.jpg"},
-
-//     {   id: 2, 
-//         nombre: "Cerveza 2",
-//         precio: 250,
-//         imagen: "./media/product-2.jpg"},
-
-//     {   id: 3,
-//         nombre: "Cerveza 3",
-//         precio: 350,
-//         imagen: "./media/product-3.jpg"}];
-
-// localStorage.setItem("arrayProductos", JSON.stringify(arrayProductos));
-
-// const arrayDesdeStorage = JSON.parse(localStorage.getItem("arrayProductos"));
-
-// arrayDesdeStorage.forEach(producto => {
-//     console.log(producto);
-// });
-
-
-// const prodCanasta = document.getElementsById("");
-
-
-// const botonAdd = document.getElementById("botonAgregar");
-
-// let canasta = document.getElementById("canasta");
-
-// botonAdd.onclick = () => agregarACanasta()
-
-// document.getElementsByClassName('buttonAdd').addEventListener('click', function(e) {
-//     let canasta = document.createElement("div");
-//     console.log(e.target.parentNode)
-//     canasta.className = "producto";
-//     canasta.id = productos.id;
-//     canasta.innerHTML = `<div class="imagen-canasta">
-//                 <img src="${productos.imagen}" alt="">
-//                 </div>
-//                 <p class="nombre-canasta">${productos.nombre}</p>
-//                 <p class="precio-canasta">${productos.precio}</p>`;
-//     canasta.prepend(canasta);}
-
-
-// <button class="buttonAdd" id="botonAgregar">Agregar al carrito</button>;
-// <button class="buttonDel" id="botonQuitar">Quitar del carrito</button>;
